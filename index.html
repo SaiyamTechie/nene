@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>AI Voice Assistant</title>
+</head>
+<body>
+    <h2>AI Voice Assistant</h2>
+    <input type="text" id="userInput" placeholder="Enter text">
+    <button onclick="processText()">Send</button>
+    <p id="response"></p>
+    <audio id="audio" controls></audio>
+
+    <script>
+        async function processText() {
+            let text = document.getElementById("userInput").value;
+
+            // Get response from Gemini AI
+            let geminiResponse = await fetchGeminiResponse(text);
+            document.getElementById("response").innerText = geminiResponse;
+
+            // Get Google TTS URL
+            let ttsUrl = https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(geminiResponse)};
+            document.getElementById("audio").src = ttsUrl;
+        }
+
+        async function fetchGeminiResponse(text) {
+            let apiKey = "AIzaSyAybJGr8rkGekB8uexzw2tOjDxJLnFYkZw";
+            let response = await fetch(https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateText?key=${apiKey}, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: { text } })
+            });
+            let data = await response.json();
+            return data.candidates?.[0]?.output || "I don't understand.";
+        }
+    </script>
+</body>
+</html>
